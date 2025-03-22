@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // Floating Action Button para refrescar los datos
       floatingActionButton: FloatingActionButton(
         onPressed: _generateRandomData,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.grey[800],
         child: const Icon(Icons.refresh),
       ),
     );
