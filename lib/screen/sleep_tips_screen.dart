@@ -53,8 +53,8 @@ class SleepTipsScreen extends StatelessWidget {
                 onPressed: () {
                   // Acción para ver más tips
                 },
-                child:
-                    const Text("Show All Tips", style: TextStyle(fontSize: 16)),
+                child: const Text("Show All Tips",
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ),
           ],

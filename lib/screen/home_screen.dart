@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math';
 
+import 'package:sleep_dev/widget/sleep_chart.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -114,27 +116,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.grey[900],
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: LineChart(
-                LineChartData(
-                  gridData: FlGridData(show: false),
-                  titlesData: FlTitlesData(show: false),
-                  borderData: FlBorderData(show: false),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: sleepData,
-                      isCurved: true,
-                      color: Colors.blueAccent,
-                      barWidth: 3,
-                      isStrokeCapRound: true,
-                      belowBarData: BarAreaData(show: false),
-                    ),
-                  ],
-                ),
-              ),
+              child: SleepChart(sleepData: sleepData),
             ),
 
             const SizedBox(height: 20),
 
+            //show details
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/sleep-detail');
+                  },
+                  child: const Text("Show Details",
+                      style:
+                          TextStyle(fontSize: 16, color: Colors.blueAccent))),
+            ),
+            const SizedBox(height: 10),
             // Horario de sueño
             const Text(
               "Your Schedule",
@@ -164,9 +162,11 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: _showActivityLog,
               child: const Center(
                 child: Text("Show All Health Data",
-                    style: TextStyle(fontSize: 16)),
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),

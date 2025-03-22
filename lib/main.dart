@@ -20,7 +20,7 @@ class SleepApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Sleep App',
+      title: 'Sleep Dev',
       theme: ThemeData.dark(),
       initialRoute: '/',
       routes: {
