@@ -10,58 +10,50 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<FlSpot> generateRandomData() {
-    final random = Random();
-    return List.generate(
-        7, (index) => FlSpot(index.toDouble(), random.nextDouble() * 10));
+  final Random random = Random();
+
+  // Datos iniciales para la gráfica
+  List<FlSpot> sleepData = [];
+
+  // Horas de sueño en las tarjetas
+  String bedtime = "11:15 PM";
+  String wakeUp = "8:15 AM";
+
+  // Lista de actividades posibles
+  final List<String> activities = [
+    "Deep Sleep",
+    "Light Sleep",
+    "REM Sleep",
+    "Awake",
+    "Short Nap",
+  ];
+  List<String> activityLog = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _generateRandomData();
   }
 
-  void _showActivityDetails() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.black87,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SizedBox(
-          height: 300,
-          child: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              const Text("Sleep Activity Details",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              const SizedBox(height: 10),
-              ListTile(
-                leading: const Icon(Icons.favorite, color: Colors.red),
-                title: const Text("Deep Sleep",
-                    style: TextStyle(color: Colors.white)),
-                subtitle: const Text("00:00 - 02:30",
-                    style: TextStyle(color: Colors.white70)),
-              ),
-              ListTile(
-                leading:
-                    const Icon(Icons.favorite_border, color: Colors.redAccent),
-                title: const Text("Light Sleep",
-                    style: TextStyle(color: Colors.white)),
-                subtitle: const Text("02:30 - 05:00",
-                    style: TextStyle(color: Colors.white70)),
-              ),
-              ListTile(
-                leading: const Icon(Icons.favorite, color: Colors.pink),
-                title: const Text("REM Sleep",
-                    style: TextStyle(color: Colors.white)),
-                subtitle: const Text("05:00 - 07:00",
-                    style: TextStyle(color: Colors.white70)),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  // Genera nuevos valores aleatorios para la gráfica y las tarjetas
+  void _generateRandomData() {
+    setState(() {
+      // Actualizar la gráfica
+      sleepData = List.generate(
+          7, (index) => FlSpot(index.toDouble(), random.nextDouble() * 10));
+
+      // Generar nuevas horas de sueño
+      int bedtimeHour = random.nextInt(3) + 9; // Entre 9 PM y 11 PM
+      int wakeUpHour = random.nextInt(3) + 6; // Entre 6 AM y 8 AM
+      bedtime =
+          "${bedtimeHour}:${random.nextInt(60).toString().padLeft(2, '0')} PM";
+      wakeUp =
+          "${wakeUpHour}:${random.nextInt(60).toString().padLeft(2, '0')} AM";
+
+      // Generar actividades aleatorias
+      activityLog = List.generate(
+          5, (_) => activities[random.nextInt(activities.length)]);
+    });
   }
 
   @override
@@ -96,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: BorderRadius.circular(15),
                 image: const DecorationImage(
                   image: NetworkImage(
-                      "https://plus.unsplash.com/premium_photo-1676166011970-bdea4f34674e?fm=jpg"), // Asegúrate de agregar esta imagen
+                      "https://plus.unsplash.com/premium_photo-1676166011970-bdea4f34674e?fm=jpg"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -129,9 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderData: FlBorderData(show: false),
                   lineBarsData: [
                     LineChartBarData(
-                      spots: generateRandomData(),
+                      spots: sleepData,
                       isCurved: true,
-                      color: Colors.blue,
+                      color: Colors.blueAccent,
                       barWidth: 3,
                       isStrokeCapRound: true,
                       belowBarData: BarAreaData(show: false),
@@ -140,20 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+
             const SizedBox(height: 20),
-            //more information
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, '/sleep-detail');
-              },
-              child: const Text(
-                "Ver datelle",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue),
-              ),
-            ),
 
             // Horario de sueño
             const Text(
@@ -165,8 +145,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _scheduleCard(Icons.bedtime, "11:15 PM", "Bedtime"),
-                _scheduleCard(Icons.alarm, "8:15 AM", "Wake up"),
+                _scheduleCard(Icons.bedtime, bedtime, "Bedtime"),
+                _scheduleCard(Icons.alarm, wakeUp, "Wake up"),
               ],
             ),
 
@@ -181,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              onPressed: _showActivityDetails,
+              onPressed: _showActivityLog,
               child: const Center(
                 child: Text("Show All Health Data",
                     style: TextStyle(fontSize: 16)),
@@ -189,6 +169,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+
+      // Floating Action Button para refrescar los datos
+      floatingActionButton: FloatingActionButton(
+        onPressed: _generateRandomData,
+        backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.refresh),
       ),
     );
   }
@@ -217,6 +204,43 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  // Muestra un modal con las actividades detalladas
+  void _showActivityLog() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.black87,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Activity Log",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+              const SizedBox(height: 10),
+              ...activityLog.map((activity) {
+                return ListTile(
+                  leading: const Icon(Icons.favorite, color: Colors.redAccent),
+                  title: Text(activity,
+                      style: const TextStyle(color: Colors.white)),
+                  subtitle: Text(
+                      "${random.nextInt(12) + 1}:${random.nextInt(60).toString().padLeft(2, '0')} AM",
+                      style: const TextStyle(color: Colors.grey)),
+                );
+              }).toList(),
+            ],
+          ),
+        );
+      },
     );
   }
 }
