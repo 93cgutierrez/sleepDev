@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:sleep_dev/screen/home_screen.dart';
 import 'package:sleep_dev/screen/login_screen.dart';
 import 'package:sleep_dev/screen/signup_screen.dart';
+import 'package:sleep_dev/screen/sleep_detail_screen.dart';
+import 'package:sleep_dev/screen/sleep_tips_screen.dart';
 import 'package:sleep_dev/screen/splash_screen.dart';
 
 void main() {
@@ -26,6 +28,8 @@ class SleepApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/home': (context) => const HomeScreen(),
+        '/sleep-tips': (context) => const SleepTipsScreen(),
+        '/sleep-detail': (context) => const SleepDetailScreen(),
       },
     );
   }
